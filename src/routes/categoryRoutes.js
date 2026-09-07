@@ -1,0 +1,12 @@
+const express = require('express')
+const { authenticateToken } = require('../middlewares/authMiddleware')
+const { authorizeAdmin } = require('../middlewares/adminMiddleware')
+const { createCategory, getAllCategories, updateCategory, deleteCategory } = require('../controllers/categoryController')
+const router = express.Router()
+
+router.post('/', authenticateToken, authorizeAdmin, createCategory)
+router.get('/', authenticateToken, getAllCategories)
+router.put('/:id', authenticateToken, authorizeAdmin, updateCategory)
+router.delete('/:id', authenticateToken, authorizeAdmin, deleteCategory)
+
+module.exports = router
