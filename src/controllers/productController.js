@@ -4,19 +4,14 @@ const createProduct = async (req, res) => {
     try {
         const { title, description, price, category_id, image, is_active } = req.body
         const created_by = req.user.id
-        if (!title || !price || !category_id || !image || typeof is_active !== "boolean" || !created_by) {
-            return res.status(400).json({
-                "message": "title, price, category_id, image, is_active and created_by required"
-            })
-        }
         const product = await prisma.product.create({
             "data": {
                 title,
                 description,
-                price: parseFloat(price),
-                category_id: parseInt(category_id),
+                price,
+                category_id,
                 image,
-                is_active: Boolean(is_active),
+                is_active,
                 created_by
             }
         })
@@ -88,20 +83,15 @@ const updateProduct = async (req, res) => {
             })
         }
         const { title, description, price, category_id, image, is_active } = req.body
-        if (!title || !price || !category_id || !image || typeof is_active !== "boolean") {
-            return res.status(400).json({
-                "message": "title, price, category_id, image, and is_active required"
-            })
-        }
         const updatedProduct = await prisma.product.update({
             where: { id },
             "data": {
                 title,
                 description,
-                price: parseFloat(price),
-                category_id: parseInt(category_id),
+                price,
+                category_id,
                 image,
-                is_active: Boolean(is_active),
+                is_active,
             }
         })
         return res.status(200).json({
