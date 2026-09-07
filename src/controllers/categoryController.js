@@ -3,11 +3,7 @@ const prisma = require("../config/prisma")
 const createCategory = async (req, res) => {
     try {
         const { name } = req.body
-        if (!name) {
-            return res.status(400).json({
-                "message": "Name required"
-            })
-        }
+
         const category = await prisma.category.create({
             "data": {
                 name
@@ -51,11 +47,7 @@ const updateCategory = async (req, res) => {
             })
         }
         const { name } = req.body
-        if (!name) {
-            return res.status(400).json({
-                "message": "Name required"
-            })
-        }
+
         const updatedCategory = await prisma.category.update({
             where: { id },
             "data": {
