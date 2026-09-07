@@ -6,12 +6,7 @@ const secretKey = process.env.JWT_SECRET
 const saltRounds = 10
 
 const createHash = async (password, saltCount) => {
-    try {
-        return await bcrypt.hash(password, saltCount)
-    } catch (error) {
-        console.log("An error occuried while trying to hash password")
-        throw new error
-    }
+    return await bcrypt.hash(password, saltCount)
 
 }
 
