@@ -1,142 +1,83 @@
 const prisma = require("../config/prisma")
+const { asyncHandler } = require('../utils/asyncHandler')
+const { AppError } = require('../utils/AppError')
+const createProduct = asyncHandler(async (req, res) => {
+    const { title, description, price, category_id, image, is_active } = req.body
+    const created_by = req.user.id
+    const product = await prisma.product.create({
+        "data": {
+            title,
+            description,
+            price,
+            category_id,
+            image,
+            is_active,
+            created_by
+        }
+    })
 
-const createProduct = async (req, res) => {
-    try {
-        const { title, description, price, category_id, image, is_active } = req.body
-        const created_by = req.user.id
-        const product = await prisma.product.create({
-            "data": {
-                title,
-                description,
-                price,
-                category_id,
-                image,
-                is_active,
-                created_by
-            }
-        })
-
-        return res.status(201).json({
-            "message": "Created a new product in database with succesfully!",
-            product
-        })
-    } catch (error) {
-        console.log("An error occuried while creating a new product in database")
-        return res.status(500).json({
-            "message": `An error occuried while creating a new product in database ${error}`
-        })
-    }
-}
-
-const getAllProducts = async (req, res) => {
-    try {
-        const products = await prisma.product.findMany({ include: { category: true } })
-        return res.status(200).json({
-            "message": "Getting products with successfully!",
-            products
-        })
-    } catch (error) {
-        console.log("An error occuried while getting products from database")
-        return res.status(500).json({
-            "message": `An error occuried while getting products from database ${error}`
-        })
-    }
+    return res.status(201).json({
+        "message": "Created a new product in database with succesfully!",
+        product
+    })
 
 }
+)
 
-const getProductById = async (req, res) => {
-    try {
-        let id = parseInt(req.params.id)
-        if (isNaN(id)) {
-            return res.status(400).json({
-                "message": "Invalid product ID"
-            })
-        }
-        const product = await prisma.product.findUnique({
-            where: { id },
-            include: { category: true }
-        })
-        if (!product) {
-            return res.status(404).json({
-                "message": `There is no product in database with this ${id} id`,
-                product
-            })
-        }
-        return res.status(200).json({
-            "message": "Getting product with succesfully!",
-            product
-        })
-    } catch (error) {
-        console.log(`An error occuried while getting product by id in database ${error}`)
-        return res.status(500).json({
-            "message": `An error occuried while getting product by id in database ${error}`
-        })
-    }
+const getAllProducts = asyncHandler(async (req, res) => {
+    const products = await prisma.product.findMany({ include: { category: true } })
+    return res.status(200).json({
+        "message": "Getting products with successfully!",
+        products
+    })
+
 }
+)
 
-const updateProduct = async (req, res) => {
-    try {
-        let id = parseInt(req.params.id)
-        if (isNaN(id)) {
-            return res.status(400).json({
-                "message": "Invalid product ID"
-            })
-        }
-        const { title, description, price, category_id, image, is_active } = req.body
-        const updatedProduct = await prisma.product.update({
-            where: { id },
-            "data": {
-                title,
-                description,
-                price,
-                category_id,
-                image,
-                is_active,
-            }
-        })
-        return res.status(200).json({
-            "message": "update product with succesfully!",
-            updatedProduct
-        })
-    } catch (error) {
-        if (error.code === 'P2025') {
-            return res.status(404).json({
-                message: `Product with id ${req.params.id} not found`
-            })
-        }
-        console.log(`An error occuried while updating product ${error}`)
-        return res.status(500).json({
-            "message": `An error occuried while updating product ${error}`
-        })
+const getProductById = asyncHandler(async (req, res) => {
+    let id = parseInt(req.params.id)
+    const product = await prisma.product.findUnique({
+        where: { id },
+        include: { category: true }
+    })
+    if (!product) {
+        throw new AppError(`product could'nt found with this ${id} id in database`, 404)
     }
-}
+    return res.status(200).json({
+        "message": "Getting product with succesfully!",
+        product
+    })
+})
 
-const deleteProduct = async (req, res) => {
-    try {
-        let id = parseInt(req.params.id)
-        if (isNaN(id)) {
-            return res.status(400).json({
-                "message": "Invalid product ID"
-            })
+const updateProduct = asyncHandler(async (req, res) => {
+    let id = parseInt(req.params.id)
+    const { title, description, price, category_id, image, is_active } = req.body
+    const updatedProduct = await prisma.product.update({
+        where: { id },
+        "data": {
+            title,
+            description,
+            price,
+            category_id,
+            image,
+            is_active,
         }
-        const deletedProduct = await prisma.product.delete({
-            where: { id }
-        })
-        return res.status(200).json({
-            "message": "Delete product with succesfully!",
-            deletedProduct
-        })
-    } catch (error) {
-        if (error.code === 'P2025') {
-            return res.status(404).json({
-                message: `Product with id ${req.params.id} not found`
-            })
-        }
-        console.log(`An error occuried while deleting product ${error}`)
-        return res.status(500).json({
-            "message": `An error occuried while deleting product ${error}`
-        })
-    }
-}
+    })
+    return res.status(200).json({
+        "message": "update product with succesfully!",
+        updatedProduct
+    })
+})
 
+const deleteProduct = asyncHandler(async (req, res) => {
+    let id = parseInt(req.params.id)
+    const deletedProduct = await prisma.product.delete({
+        where: { id }
+    })
+    return res.status(200).json({
+        "message": "Delete product with succesfully!",
+        deletedProduct
+    })
+}
+)
 module.exports = { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct }
