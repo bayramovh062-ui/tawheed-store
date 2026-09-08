@@ -27,9 +27,7 @@ const getAllCategories = asyncHandler(async (req, res) => {
 
 const updateCategory = asyncHandler(async (req, res) => {
     let id = parseInt(req.params.id)
-    if (isNaN(id)) {
-        throw new AppError("Invalid category ID", 400)
-    }
+
     const { name } = req.body
 
     const updatedCategory = await prisma.category.update({
@@ -48,10 +46,6 @@ const updateCategory = asyncHandler(async (req, res) => {
 const deleteCategory = asyncHandler(async (req, res) => {
     let id
     id = parseInt(req.params.id)
-    if (isNaN(id)) {
-        throw new AppError("Invalid category ID", 400)
-
-    }
     const deletedCategory = await prisma.category.delete({
         where: { id }
     })

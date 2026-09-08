@@ -6,6 +6,10 @@ const productRoutes = require('./routes/productRoutes')
 const { globalErrorMiddleware } = require("./middlewares/errorMiddleware")
 require('dotenv').config()
 
+if (!process.env.JWT_SECRET) {
+    console.log("FATAL ERROR: JWT_SECRET could'nt found in .env")
+    process.exit(1)
+}
 const app = express()
 
 app.use(cors())
