@@ -4,7 +4,7 @@ const { register, login } = require('../controllers/authController')
 const { authenticateToken } = require('../middlewares/authMiddleware')
 const { limiter } = require('../middlewares/rateLimiter')
 const { validationMiddleware } = require('../middlewares/validationMiddleware')
-const { registerSchema, loginSchema } = require('../validations/authSchema')
+const { registerSchema, loginSchema } = require('../schemas/authSchema')
 
 router.post('/register', limiter, validationMiddleware(registerSchema), register)
 router.post('/login', limiter, validationMiddleware(loginSchema), login)

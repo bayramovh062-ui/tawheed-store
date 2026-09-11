@@ -31,5 +31,16 @@ const updateProductSchema = z.object({
     })
 })
 
+const productQuerySchema = z.object({
+    query: z.object({
+        page: z.string().optional(),
+        limit: z.string().optional(),
+        search: z.string().optional(),
+        categoryId: z.string().optional(),
+        minPrice: z.string().optional(),
+        maxPrice: z.string().optional()
+    })
+})
 
-module.exports = { createProductSchema, getProductByIdAndDeleteSchema, updateProductSchema }
+
+module.exports = { createProductSchema, getProductByIdAndDeleteSchema, updateProductSchema, productQuerySchema }

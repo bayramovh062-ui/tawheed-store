@@ -1,6 +1,7 @@
 const prisma = require("../config/prisma")
 const { asyncHandler } = require('../utils/asyncHandler')
 const { AppError } = require('../utils/AppError')
+
 const createProduct = asyncHandler(async (req, res) => {
     const { title, description, price, category_id, image, is_active } = req.body
     const created_by = req.user.id
@@ -25,10 +26,43 @@ const createProduct = asyncHandler(async (req, res) => {
 )
 
 const getAllProducts = asyncHandler(async (req, res) => {
-    const products = await prisma.product.findMany({ include: { category: true } })
+    const { page, limit, search, categoryId, minPrice, maxPrice } = req.query
+    const where = {}
+    const pageNum = Number(page) || 1
+    const limitNum = Number(limit) || 10
+    const skip = (pageNum - 1) * limitNum
+
+    if (search) {
+        where.title = { contains: search, mode: 'insensitive' }
+    }
+
+    if (categoryId) {
+        where.category_id = Number(categoryId)
+    }
+
+    if (minPrice || maxPrice) {
+        where.price = {}
+        if (minPrice) where.price.gte = Number(minPrice)
+        if (maxPrice) where.price.lte = Number(maxPrice)
+    }
+    const [products, totalProducts] = await Promise.all([prisma.product.findMany({
+        include: { category: true },
+        where,
+        skip,
+        take: limitNum
+
+    }), prisma.product.count({
+        where
+    })])
     return res.status(200).json({
         "message": "Getting products with successfully!",
-        products
+        products,
+        pagination: {
+            total: totalProducts,
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(totalProducts / limitNum) // Ümumi səhifə sayı
+        }
     })
 
 }
