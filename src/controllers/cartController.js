@@ -3,7 +3,7 @@ const { AppError } = require('../utils/AppError')
 const { asyncHandler } = require('../utils/asyncHandler')
 
 const addItemToCart = asyncHandler(async (req, res) => {
-    const { product_id, quantity, location } = req.body
+    const { product_id, quantity } = req.body
     const user_id = req.user.id
     let message = "added item to order with successfully!"
 
@@ -43,7 +43,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
                 product_id,
                 product_quantity: quantity,
                 product_price: product.price,
-                location,
                 order_id: userOrder.id
             }
         })

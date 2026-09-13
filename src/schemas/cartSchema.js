@@ -3,7 +3,6 @@ const { z } = require('zod')
 const addToCartSchema = z.object({
     body: z.object({
         product_id: z.number().int().positive(),
-        location: z.string(),
         quantity: z.number().int().min(1)
     })
 })
