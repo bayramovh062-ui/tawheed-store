@@ -59,7 +59,7 @@ const updateCartItem = asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
     const user_id = req.user.id
     const order_item = await prisma.orderItem.findFirst({
-        where: { id, order: { user_id } }
+        where: { id, order: { user_id, status: 'PENDING' } }
     })
 
     if (!order_item) {
@@ -73,7 +73,7 @@ const updateCartItem = asyncHandler(async (req, res) => {
 
     })
     const order = await prisma.order.findFirst({
-        where: { id: updatedOrderItem.order_id, status: 'PENDING' }
+        where: { id: updatedOrderItem.order_id }
     })
     let totalPrice = order.total_amount
 
@@ -97,7 +97,7 @@ const deleteOrderItem = asyncHandler(async (req, res) => {
     const id = Number(req.params.id)
     const user_id = req.user.id
     const order_item = await prisma.orderItem.findFirst({
-        where: { id, order: { user_id } }
+        where: { id, order: { user_id, status: 'PENDING' } }
     })
 
     if (!order_item) {
@@ -134,8 +134,11 @@ const getUserCartItems = asyncHandler(async (req, res) => {
 
     if (!order) {
         return res.status(200).json({
-            items: [],
-            total_amount: 0
+            message: "cart is empty",
+            order: {
+                items: [],
+                total_amount: 0
+            }
         })
     }
     return res.status(200).json({
