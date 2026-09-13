@@ -86,7 +86,7 @@ model Activity_log {
 model OrderItem {
   id Int @id @default(autoincrement())
   product_quantity Int
-  product_id Int
+  product_id Int 
   product Product @relation(fields: [product_id], references: [id])
   product_price Float
   location String

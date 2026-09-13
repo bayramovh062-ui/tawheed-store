@@ -61,7 +61,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
             total: totalProducts,
             page: pageNum,
             limit: limitNum,
-            totalPages: Math.ceil(totalProducts / limitNum) // Ümumi səhifə sayı
+            totalPages: Math.ceil(totalProducts / limitNum)
         }
     })
 
