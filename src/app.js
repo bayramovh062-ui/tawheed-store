@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const cors = require('cors')
 const authRoutes = require('./routes/authRoutes')
@@ -5,7 +6,7 @@ const categoryRoutes = require('./routes/categoryRoutes')
 const productRoutes = require('./routes/productRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const { globalErrorMiddleware } = require("./middlewares/errorMiddleware")
-require('dotenv').config()
+
 
 if (!process.env.JWT_SECRET) {
     console.log("FATAL ERROR: JWT_SECRET could'nt found in .env")

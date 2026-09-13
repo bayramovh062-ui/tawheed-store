@@ -1,15 +1,14 @@
-const { asyncHandler } = require("../utils/asyncHandler")
-
-const validationMiddleware = (schema) => {
-    return asyncHandler((req, res, next) => {
+const validationMiddleware = (schema) => (req, res, next) => {
+    try {
         schema.parse({
             body: req.body || {},
             params: req.params || {},
             query: req.query || {}
         })
-        return next()
-    })
-
+        next()
+    } catch (error) {
+        next(error)
+    }
 }
 
 module.exports = { validationMiddleware }
