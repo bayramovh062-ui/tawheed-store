@@ -7,7 +7,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
     const user_id = req.user.id
     let message = "added item to order with successfully!"
 
-    // 1. Məhsulun bazada olub-olmadığını yoxla
     const product = await prisma.product.findUnique({
         where: { id: product_id }
     })
@@ -15,7 +14,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
         throw new AppError(`couldn't found item with this ${product_id} id in database`, 404)
     }
 
-    // 2. İstifadəçinin PENDING statuslu active order-ni tap və ya yarat
     let userOrder = await prisma.order.findFirst({
         where: { user_id, status: 'PENDING' }
     })
@@ -31,13 +29,11 @@ const addItemToCart = asyncHandler(async (req, res) => {
         message = "created order and added item to order with succesfully!"
     }
 
-    // 3. Məhsulun bu order daxilində olub-olmadığını yoxla
     let order_item = await prisma.orderItem.findFirst({
         where: { order_id: userOrder.id, product_id }
     })
 
     if (!order_item) {
-        // Yoxdursa: Yeni orderItem yarat
         order_item = await prisma.orderItem.create({
             data: {
                 product_id,
@@ -47,7 +43,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
             }
         })
     } else {
-        // Varsa: Mövcud sayın üstünə yeni gələn sayı əlavə et
         order_item = await prisma.orderItem.update({
             where: { id: order_item.id },
             data: {
@@ -56,7 +51,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
         })
     }
 
-    // 4. Əsas Order-in ümumi məbləğinə YALNIZ yeni əlavə edilən miqdarın qiymətini gəl
     const updatedOrder = await prisma.order.update({
         where: { id: userOrder.id },
         data: {

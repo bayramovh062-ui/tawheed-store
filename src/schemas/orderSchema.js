@@ -8,4 +8,13 @@ const checkoutSchema = z.object({
     })
 })
 
-module.exports = { checkoutSchema }
+const updateOrderStatusSchema = z.object({
+    body: z.object({
+        status: z.enum(['PENDING', 'PROCESSING', 'DELIVERED', 'PAID', 'SHIPPED', 'CANCELLED'])
+    }),
+    params: z.object({
+        id: z.string().regex(/^\d+$/)
+    })
+})
+
+module.exports = { checkoutSchema, updateOrderStatusSchema }

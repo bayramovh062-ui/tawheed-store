@@ -37,4 +37,62 @@ const checkOut = asyncHandler(async (req, res) => {
     })
 })
 
-module.exports = { checkOut }
+const getAllOrders = asyncHandler(async (req, res) => {
+    const orders = await prisma.order.findMany({
+        where: { status: { not: 'PENDING' } },
+        include: { user: true, items: { include: { product: true } } }
+    })
+
+    if (orders.length === 0) {
+        return res.status(200).json({
+            "message": "There is no any order in database",
+            orders
+        })
+    }
+    return res.status(200).json({
+        "message": "getting all orders with succesfully",
+        orders
+    })
+})
+
+const updateOrderStatus = asyncHandler(async (req, res) => {
+    const { status } = req.body
+    const id = Number(req.params.id)
+    const order = await prisma.order.findUnique({
+        where: { id }
+    })
+    if (!order) {
+        return res.status(404).json({
+            "message": `We couldn't found any order with this ${id} id in database`
+        })
+    }
+    const updatedOrder = await prisma.order.update({
+        where: { id },
+        data: {
+            status
+        }
+    })
+
+    return res.status(200).json({
+        "message": `updated order's status from ${order.status} to ${updatedOrder.status} with succesfully`
+    })
+})
+
+const getUserOrderHistory = asyncHandler(async (req, res) => {
+    const user_id = req.user.id
+    const orders = await prisma.order.findMany({
+        where: { user_id, status: { not: 'PENDING' } },
+        include: { items: { include: { product: true } } }
+    })
+    if (orders.length === 0) {
+        return res.status(200).json({
+            "message": "You don't have any order history",
+            orders
+        })
+    }
+    return res.status(200).json({
+        "message": "getting orders history successfully",
+        orders
+    })
+})
+module.exports = { checkOut, getAllOrders, updateOrderStatus, getUserOrderHistory }
