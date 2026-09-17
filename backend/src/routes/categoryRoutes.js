@@ -6,7 +6,7 @@ const router = express.Router()
 const { categorySchema, deleteCategorySchema, updateCategorySchema } = require('../schemas/categorySchema')
 const { validationMiddleware } = require('../middlewares/validationMiddleware')
 router.post('/', authenticateToken, authorizeAdmin, validationMiddleware(categorySchema), createCategory)
-router.get('/', authenticateToken, getAllCategories)
+router.get('/', getAllCategories)
 router.put('/:id', authenticateToken, authorizeAdmin, validationMiddleware(updateCategorySchema), updateCategory)
 router.delete('/:id', authenticateToken, authorizeAdmin, validationMiddleware(deleteCategorySchema), deleteCategory)
 

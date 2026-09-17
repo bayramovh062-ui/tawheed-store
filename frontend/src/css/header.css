@@ -1,0 +1,20 @@
+.left-navbar {
+    width: 150px;
+    height: 30px;
+    display: contents;
+}
+
+.log-buttons {
+    width: 110px;
+    height: 40px;
+}
+
+.right-navbar {
+    height: 30px;
+    width: 270px;
+}
+
+.middle-navbar {
+    width: 500px;
+    height: 20px;
+}
