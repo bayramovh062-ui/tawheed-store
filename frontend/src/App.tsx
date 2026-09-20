@@ -7,8 +7,8 @@ import Header from './components/Header'
 function App() {
   return (
     <>
+      <Header />
       <PageContainer>
-        <Header />
         <BrowserRouter>
           <RouteConfig />
         </BrowserRouter>
