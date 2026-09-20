@@ -10,7 +10,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 
 function Header() {
-    const [isLoggedUser, setIsLoggedUser] = useState(true)
+    const [isLoggedUser, setIsLoggedUser] = useState(false)
 
     return (
         <header className="header-wrapper">

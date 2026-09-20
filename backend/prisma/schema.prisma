@@ -45,12 +45,14 @@ model User {
   order Order[]
   product Product[]
   activity_log Activity_log[]
+  comment Comment[]
 }
 
 model Category {
   id Int  @id @default(autoincrement())
   name String @unique
   product Product[]
+  icon String ?
 }
 
 model Product {
@@ -65,8 +67,10 @@ model Product {
   updated_at DateTime?
   created_by Int
   user User @relation(fields: [created_by], references: [id])
-  is_active Boolean
+  is_active Boolean @default(true)
   orderItems OrderItem[]
+  average_rating Float @default(0)
+  comments Comment[]
 }
 
 model Order {
@@ -100,6 +104,17 @@ model OrderItem {
   product_price Float
   order_id Int
   order Order @relation(fields: [order_id], references: [id])
-
   @@unique([order_id, product_id])
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  user_id Int
+  comment String
+  created_at DateTime @default(now())
+  updated_at DateTime ?
+  rating Float
+  product_id Int
+  product Product @relation(fields: [product_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 }
