@@ -40,7 +40,7 @@ const checkOut = asyncHandler(async (req, res) => {
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await prisma.order.findMany({
         where: { status: { not: 'PENDING' } },
-        include: { user: true, items: { include: { product: true } } }
+        include: { user: { select: { id: true, name: true, last_name: true, email: true } }, items: { include: { product: true } } }
     })
 
     if (orders.length === 0) {
