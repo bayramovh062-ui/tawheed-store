@@ -51,12 +51,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
         })
     }
 
-    const updatedOrder = await prisma.order.update({
-        where: { id: userOrder.id },
-        data: {
-            total_amount: userOrder.total_amount + (product.price * quantity)
-        }
-    })
+    const updatedOrder = await recalculateOrderTotal(order_item.order_id)
 
     return res.status(201).json({
         message,
@@ -83,18 +78,8 @@ const updateCartItem = asyncHandler(async (req, res) => {
         data: { product_quantity: quantity }
     })
 
-    const order = await prisma.order.findFirst({
-        where: { id: updatedOrderItem.order_id }
-    })
 
-    let totalPrice = order.total_amount
-    totalPrice -= (order_item.product_quantity * order_item.product_price)
-    totalPrice += (updatedOrderItem.product_quantity * updatedOrderItem.product_price)
-
-    await prisma.order.update({
-        where: { id: order.id },
-        data: { total_amount: totalPrice }
-    })
+    await recalculateOrderTotal(updatedOrderItem.order_id)
 
     return res.status(200).json({
         message: "updated order with succesfully",
@@ -118,16 +103,8 @@ const deleteOrderItem = asyncHandler(async (req, res) => {
         where: { id }
     })
 
-    const order = await prisma.order.findUnique({
-        where: { id: deletedOrderItem.order_id }
-    })
 
-    let totalPrice = order.total_amount - (deletedOrderItem.product_price * deletedOrderItem.product_quantity)
-
-    await prisma.order.update({
-        where: { id: order.id },
-        data: { total_amount: totalPrice }
-    })
+    await recalculateOrderTotal(deletedOrderItem.order_id)
 
     return res.status(200).json({
         message: "deleted item with succesfully!",
@@ -157,5 +134,22 @@ const getUserCartItems = asyncHandler(async (req, res) => {
         order
     })
 })
+
+const recalculateOrderTotal = async (order_id) => {
+    const items = await prisma.orderItem.findMany({
+        where: { order_id: order_id }
+    })
+
+    const totalAmount = items.reduce((sum, item) => {
+        return sum + item.product_quantity * item.product_price
+    }, 0)
+
+    return await prisma.order.update({
+        where: { id: order_id },
+        data: {
+            total_amount: totalAmount
+        }
+    })
+}
 
 module.exports = { deleteOrderItem, updateCartItem, addItemToCart, getUserCartItems }
