@@ -5,11 +5,18 @@ const checkOut = asyncHandler(async (req, res) => {
     const { payment_method, delivery_location, contact_phone } = req.body
     const user_id = req.user.id
     const userOrder = await prisma.order.findFirst({
-        where: { status: 'PENDING', user_id }
+        where: { status: 'PENDING', user_id },
+        include: { items: true }
     })
     if (!userOrder) {
         return res.status(404).json({
             "message": "You don't have any order in your cart."
+        })
+    }
+
+    if (userOrder.items.length === 0) {
+        return res.status(400).json({
+            "message": "Your cart is empty"
         })
     }
     const updatedOrder = await prisma.order.update({
