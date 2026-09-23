@@ -46,6 +46,12 @@ const updateCategory = asyncHandler(async (req, res) => {
 const deleteCategory = asyncHandler(async (req, res) => {
     let id
     id = parseInt(req.params.id)
+    const productCount = await prisma.product.count({
+        where: { category_id: id }
+    })
+    if (productCount != 0) {
+        throw new AppError(`'there are some items with this category you can't delete`, 400)
+    }
     const deletedCategory = await prisma.category.delete({
         where: { id }
     })

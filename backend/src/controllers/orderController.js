@@ -1,3 +1,4 @@
+const { process } = require('zod/v4/core')
 const prisma = require('../config/prisma')
 const { asyncHandler } = require('../utils/asyncHandler')
 
@@ -29,7 +30,7 @@ const checkOut = asyncHandler(async (req, res) => {
         where: { id: userOrder.id }
     })
     if (payment_method === "CARD") {
-        const adminPhone = "994556935304"
+        const adminPhone = process.env.ADMIN_PHONE
         const text = `Salam, mən ${updatedOrder.id} nömrəli sifarişin ödənişini kartla etmək istəyirəm. Məbləğ: ${updatedOrder.total_amount} AZN.`
         const whatsappLink = `https://wa.me/${adminPhone}?text=${encodeURIComponent(text)}`
         return res.status(200).json({

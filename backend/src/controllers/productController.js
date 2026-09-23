@@ -32,6 +32,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     const limitNum = Number(limit) || 10
     const skip = (pageNum - 1) * limitNum
 
+    where.is_active = true
     if (search) {
         where.title = { contains: search, mode: 'insensitive' }
     }
@@ -70,12 +71,12 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
 const getProductById = asyncHandler(async (req, res) => {
     let id = parseInt(req.params.id)
-    const product = await prisma.product.findUnique({
-        where: { id },
+    const product = await prisma.product.findFirst({
+        where: { id, is_active: true },
         include: { category: true }
     })
     if (!product) {
-        throw new AppError(`product could'nt found with this ${id} id in database`, 404)
+        throw new AppError(`product could'nt found or inactive with this ${id} id in database`, 404)
     }
     return res.status(200).json({
         "message": "Getting product with succesfully!",
@@ -105,9 +106,22 @@ const updateProduct = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
     let id = parseInt(req.params.id)
-    const deletedProduct = await prisma.product.delete({
-        where: { id }
+    const orderItem = await prisma.orderItem.findFirst({
+        where: { product_id: id }
     })
+    let deletedProduct;
+    if (orderItem) {
+        deletedProduct = await prisma.product.update({
+            where: { id },
+            data: {
+                is_active: false
+            }
+        })
+    } else {
+        deletedProduct = await prisma.product.delete({
+            where: { id }
+        })
+    }
     return res.status(200).json({
         "message": "Delete product with succesfully!",
         deletedProduct

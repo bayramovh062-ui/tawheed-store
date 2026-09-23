@@ -7,11 +7,11 @@ const addItemToCart = asyncHandler(async (req, res) => {
     const user_id = req.user.id
     let message = "added item to order with successfully!"
 
-    const product = await prisma.product.findUnique({
-        where: { id: product_id }
+    const product = await prisma.product.findFirst({
+        where: { id: product_id, is_active: true }
     })
     if (!product) {
-        throw new AppError(`couldn't found item with this ${product_id} id in database`, 404)
+        throw new AppError(`couldn't found or inactive item with this ${product_id} id in database`, 404)
     }
 
     const [orderItem, updatedOrder] = await prisma.$transaction(async (tx) => {
@@ -20,7 +20,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
         })
 
         if (!userOrder) {
-            userOrder = await prisma.order.create({
+            userOrder = await tx.order.create({
                 data: {
                     total_amount: 0,
                     status: 'PENDING',
