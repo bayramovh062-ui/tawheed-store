@@ -8,7 +8,7 @@ const globalErrorMiddleware = (err, req, res, next) => {
     if (err instanceof ZodError) {
         statusCode = 400
         message = "validation error"
-        errors = err.errors
+        errors = err.issues
     }
 
     if (err.name === "JsonWebTokenError") {
