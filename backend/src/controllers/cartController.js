@@ -14,48 +14,48 @@ const addItemToCart = asyncHandler(async (req, res) => {
         throw new AppError(`couldn't found item with this ${product_id} id in database`, 404)
     }
 
-    let userOrder = await prisma.order.findFirst({
-        where: { user_id, status: 'PENDING' }
+    const [orderItem, updatedOrder] = await prisma.$transaction(async (tx) => {
+        let userOrder = await tx.order.findFirst({
+            where: { user_id, status: 'PENDING' }
+        })
+
+        if (!userOrder) {
+            userOrder = await prisma.order.create({
+                data: {
+                    total_amount: 0,
+                    status: 'PENDING',
+                    user_id
+                }
+            })
+            message = "created order and added item to order with succesfully!"
+        }
+        let order_item = await tx.orderItem.findFirst({
+            where: { order_id: userOrder.id, product_id }
+        })
+        if (!order_item) {
+            order_item = await tx.orderItem.create({
+                data: {
+                    product_id,
+                    product_quantity: quantity,
+                    product_price: product.price,
+                    order_id: userOrder.id
+                }
+            })
+        } else {
+            order_item = await tx.orderItem.update({
+                where: { id: order_item.id },
+                data: {
+                    product_quantity: order_item.product_quantity + quantity
+                }
+            })
+        }
+        const updatedOrder = await recalculateOrderTotal(order_item.order_id, tx)
+        return [order_item, updatedOrder]
     })
-
-    if (!userOrder) {
-        userOrder = await prisma.order.create({
-            data: {
-                total_amount: 0,
-                status: 'PENDING',
-                user_id
-            }
-        })
-        message = "created order and added item to order with succesfully!"
-    }
-
-    let order_item = await prisma.orderItem.findFirst({
-        where: { order_id: userOrder.id, product_id }
-    })
-
-    if (!order_item) {
-        order_item = await prisma.orderItem.create({
-            data: {
-                product_id,
-                product_quantity: quantity,
-                product_price: product.price,
-                order_id: userOrder.id
-            }
-        })
-    } else {
-        order_item = await prisma.orderItem.update({
-            where: { id: order_item.id },
-            data: {
-                product_quantity: order_item.product_quantity + quantity
-            }
-        })
-    }
-
-    const updatedOrder = await recalculateOrderTotal(order_item.order_id)
 
     return res.status(201).json({
         message,
-        order_item,
+        orderItem,
         total_amount: updatedOrder.total_amount
     })
 })
@@ -73,13 +73,14 @@ const updateCartItem = asyncHandler(async (req, res) => {
         throw new AppError("Cart item not found or unauthorized", 404)
     }
 
-    const updatedOrderItem = await prisma.orderItem.update({
-        where: { id },
-        data: { product_quantity: quantity }
+    const updatedOrderItem = await prisma.$transaction(async (tx) => {
+        const item = await tx.orderItem.update({
+            where: { id },
+            data: { product_quantity: quantity }
+        })
+        await recalculateOrderTotal(item.order_id, tx)
+        return item
     })
-
-
-    await recalculateOrderTotal(updatedOrderItem.order_id)
 
     return res.status(200).json({
         message: "updated order with succesfully",
@@ -99,18 +100,21 @@ const deleteOrderItem = asyncHandler(async (req, res) => {
         throw new AppError("Cart item not found or unauthorized", 404)
     }
 
-    const deletedOrderItem = await prisma.orderItem.delete({
-        where: { id }
+    const deletedOrderItem = await prisma.$transaction(async (tx) => {
+        const item = await tx.orderItem.delete({
+            where: { id }
+        })
+        await recalculateOrderTotal(item.order_id, tx)
+        return item
     })
-
-
-    await recalculateOrderTotal(deletedOrderItem.order_id)
 
     return res.status(200).json({
         message: "deleted item with succesfully!",
         deletedOrderItem
     })
 })
+
+
 
 const getUserCartItems = asyncHandler(async (req, res) => {
     const user_id = req.user.id
@@ -135,8 +139,8 @@ const getUserCartItems = asyncHandler(async (req, res) => {
     })
 })
 
-const recalculateOrderTotal = async (order_id) => {
-    const items = await prisma.orderItem.findMany({
+const recalculateOrderTotal = async (order_id, tx = prisma) => {
+    const items = await tx.orderItem.findMany({
         where: { order_id: order_id }
     })
 
@@ -144,7 +148,7 @@ const recalculateOrderTotal = async (order_id) => {
         return sum + item.product_quantity * item.product_price
     }, 0)
 
-    return await prisma.order.update({
+    return await tx.order.update({
         where: { id: order_id },
         data: {
             total_amount: totalAmount
