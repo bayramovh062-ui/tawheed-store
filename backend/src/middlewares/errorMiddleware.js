@@ -29,7 +29,7 @@ const globalErrorMiddleware = (err, req, res, next) => {
         statusCode = 400;
         message = "Duplicate field value entered";
     }
-    console.log(JSON.stringify(error, null, 2))
+    console.log(JSON.stringify(err, null, 2))
     return res.status(statusCode).json({
         status: statusCode >= 500 ? 'error' : 'fail',
         message,
