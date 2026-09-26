@@ -1,24 +1,39 @@
+import { useEffect } from 'react'
 import '../css/subHeader.css'
+import Category from './Category'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../redux/store'
+import { fetchCategoriesFromBackend } from '../redux/slice/categorySlice'
 import { Button } from '@mui/material'
-import { useState } from 'react';
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import Drawer from '@mui/material/Drawer';
+import { IoReorderThreeOutline } from "react-icons/io5";
+
 
 function SubHeader() {
-    const [isClicked, setIsClicked] = useState(false)
-
+    const { categories, loading, error } = useSelector((state: RootState) => {
+        return state.category
+    })
+    const dispatch = useDispatch<AppDispatch>()
+    useEffect(() => {
+        dispatch(fetchCategoriesFromBackend())
+    }, [])
     return (
         <header className="sub-header-wrapper">
             <div className="sub-header-container">
-                <Button variant="contained" startIcon={<BiSolidCategoryAlt />} size='small' onClick={() => {
-                    setIsClicked(!isClicked)
-                }}>
-                    Categories
-                </Button>
-                <Drawer open={isClicked} anchor='right' onClose={() => {
-                    setIsClicked(!isClicked)
-                }}>
-                </Drawer>
+                <div className='left-sub-header'>
+                    <Button variant="outlined" startIcon={<IoReorderThreeOutline />} sx={{
+                        border: 'none',
+                        color: 'black',
+                        marginTop: '2px',
+                        marginRight: '5px'
+                    }}>
+                        Categories
+                    </Button>
+                </div>
+                <div className='middle-sub-header'>
+                    {categories.map((cat) => {
+                        return < Category key={cat.id} cat={cat} />
+                    })}
+                </div>
             </div>
         </header>
     )

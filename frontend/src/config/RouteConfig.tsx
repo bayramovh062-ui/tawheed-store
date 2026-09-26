@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from '../components/Home'
+import Products from '../components/Products'
 function RouteConfig() {
     return (
         <div>
             <Routes>
-                <Route path='/' element={<Home />}></Route>
+                <Route path='/' element={<Products />}></Route>
             </Routes>
         </div>
     )

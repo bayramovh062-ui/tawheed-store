@@ -6,10 +6,21 @@
 
 .sub-header-container {
     max-width: 1400px;
-    height: 70px;
+    height: 47px;
     display: flex;
     justify-content: center;
-    padding: 0 30px;
     align-items: center;
     box-sizing: border-box;
+}
+
+.middle-sub-header {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.left-sub-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
