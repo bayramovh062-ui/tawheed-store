@@ -16,6 +16,7 @@ function SubHeader() {
     useEffect(() => {
         dispatch(fetchCategoriesFromBackend())
     }, [])
+
     return (
         <header className="sub-header-wrapper">
             <div className="sub-header-container">

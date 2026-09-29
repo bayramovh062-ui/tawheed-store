@@ -66,7 +66,7 @@ const login = asyncHandler(async (req, res) => {
     }
     const payload = createPayload(user.id, user.email, user.role)
     const options = {
-        expiresIn: '1d',
+        expiresIn: '10d',
     }
     const token = jwt.sign(payload, secretKey, options)
 

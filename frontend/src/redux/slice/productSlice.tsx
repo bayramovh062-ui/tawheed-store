@@ -2,18 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export interface productType {
+    id: number,
     title: string,
     description?: string,
-    price: Number,
-    category_id: Number,
+    price: number,
+    category_id: number,
     image: string,
     is_active: boolean,
     average_rating: number,
 }
 
-export interface productStateType {
+export type productStateType = {
     products: productType[],
-    loading: Boolean,
+    loading: boolean,
     error: null | string
 }
 
