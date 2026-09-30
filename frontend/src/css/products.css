@@ -6,3 +6,9 @@
     justify-content: center;
     margin-top: 15px;
 }
+
+.product-title {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
