@@ -46,6 +46,7 @@ model User {
   product Product[]
   activity_log Activity_log[]
   comment Comment[]
+  favorites Favorite []
 }
 
 model Category {
@@ -71,6 +72,7 @@ model Product {
   orderItems OrderItem[]
   average_rating Float @default(0)
   comments Comment[]
+  favorites Favorite[]
 }
 
 model Order {
@@ -117,4 +119,15 @@ model Comment {
   product_id Int
   product Product @relation(fields: [product_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
+}
+
+model Favorite {
+  id Int @id @default(autoincrement())
+  user_id Int
+  product_id Int
+
+  user User @relation(fields: [user_id], references: [id], onDelete:Cascade)
+  product Product @relation(fields : [product_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, product_id])
 }
