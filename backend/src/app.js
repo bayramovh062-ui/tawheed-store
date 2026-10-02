@@ -6,6 +6,7 @@ const categoryRoutes = require('./routes/categoryRoutes')
 const productRoutes = require('./routes/productRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const orderRoutes = require('./routes/orderRoutes')
+const favoriteRoute = require('./routes/favoriteRoute')
 const { globalErrorMiddleware } = require("./middlewares/errorMiddleware")
 
 
@@ -22,6 +23,7 @@ app.use('/api/categories', categoryRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/order', orderRoutes)
+app.use('/api/favorite', favoriteRoute)
 
 app.get('/', (req, res) => {
     res.send('server working with succesfully')

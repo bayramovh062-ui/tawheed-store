@@ -24,15 +24,20 @@ function Product({ product }: propState) {
     return (
         <div style={{ display: 'flex' }}>
             <Card sx={{ width: '280px', objectFit: 'contain' }}>
+                <IconButton sx={{
+                    position: 'absolute',
+                    zIndex: '2',
+                    top: '8',
+                    right: '8',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': { backgroundColor: 'white' }
+                }}><FavoriteBorderIcon /></IconButton>
                 <CardActionArea>
                     <CardMedia component="img" height="310" image={product.image} alt={product.title} />
-                    <IconButton sx={{
-                        margin: '0'
-                    }}><FavoriteBorderIcon /></IconButton>
                     <CardContent>
                         <div style={{ height: '187px' }}>
-                            <Typography gutterBottom variant="h5" component="div">
-                                <p className="product-title">{product.title}</p>
+                            <Typography className="product-title" gutterBottom variant="h5" component="div">
+                                {product.title}
                             </Typography>
                             <Typography variant='body1' sx={{ color: 'darkorange' }}>
                                 {product.price} AZN
@@ -41,11 +46,9 @@ function Product({ product }: propState) {
                                 {product.description}
                             </Typography>
                         </div>
-                        <Typography>
-                            <Stack spacing={1}>
-                                <div style={{ display: 'flex', flexDirection: 'row' }}><p style={{ margin: '0', marginRight: '6px' }}>{rating}</p> <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly /></div>
-                            </Stack>
-                        </Typography>
+                        <Stack spacing={1} >
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}><Typography component="span" sx={{ margin: '0', marginRight: '6px' }}>{rating}</Typography> <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly /></div>
+                        </Stack>
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
