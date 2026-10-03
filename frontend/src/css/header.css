@@ -20,6 +20,10 @@
     gap: 10px;
 }
 
+.left-navbar:hover {
+    cursor: pointer;
+}
+
 .logo-img {
     width: 70px;
     height: 50px;

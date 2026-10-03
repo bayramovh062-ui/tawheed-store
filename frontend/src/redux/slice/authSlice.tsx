@@ -34,6 +34,14 @@ export const authState: loginAuthStateType = {
     loading: false
 }
 
+export interface registerDataCredentials {
+    name: string,
+    last_name: string,
+    email: string,
+    password: string,
+    location?: string
+}
+
 export const fetchLoginResult = createAsyncThunk('post/login', async (credentials: loginCredentials, { rejectWithValue }) => {
     try {
         const response = await axios.post(`http://localhost:5000/api/auth/login`, credentials)
@@ -47,6 +55,24 @@ export const fetchLoginResult = createAsyncThunk('post/login', async (credential
         return rejectWithValue(
             error.response?.data?.message || 'An error occuried while login'
         )
+    }
+})
+
+export const fetchRegisterResult = createAsyncThunk('post/register', async (registerData: registerDataCredentials, { rejectWithValue, dispatch }) => {
+    try {
+        const response = await axios.post(`http://localhost:5000/api/auth/register`, registerData)
+        if (response.status === 201 || response.data) {
+            const credentials = {
+                email: registerData.email,
+                password: registerData.password
+            }
+
+            const loginResult = await dispatch(fetchLoginResult(credentials)).unwrap()
+            return loginResult
+        }
+
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || 'An error occuried while login')
     }
 })
 
@@ -75,8 +101,21 @@ const authSlice = createSlice({
                 state.loading = false
                 state.error = action.payload as string
             })
+            .addCase(fetchRegisterResult.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchRegisterResult.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(fetchRegisterResult.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as string
+            })
     }
 })
+
+
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -8,14 +8,18 @@ import { useState } from 'react'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
+import { useNavigate } from 'react-router-dom'
 
 function Header() {
     const [isLoggedUser, setIsLoggedUser] = useState(false)
+    const navigate = useNavigate()
 
     return (
         <header className="header-wrapper">
             <div className="header-container">
-                <div className="left-navbar">
+                <div className="left-navbar" onClick={() => {
+                    navigate('/')
+                }}>
                     <img className="logo-img" src={logoImg} alt="Logo" />
                     <img className="text-img" src={textImg} alt="Brand Name" />
                 </div>
@@ -35,7 +39,9 @@ function Header() {
                     {!isLoggedUser ? (
                         <div className="login-button-wrapper">
                             <PersonIcon className="person-icon" />
-                            <button className="login-register-button">Login/Register</button>
+                            <button className="login-register-button" onClick={() => {
+                                navigate('/Register')
+                            }}>Login/Register</button>
                         </div>
                     ) : (
                         <Avatar className="avatar" alt="your profile" sx={{ bgcolor: 'deepskyblue', width: 45, height: 45 }}>

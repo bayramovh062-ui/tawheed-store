@@ -8,13 +8,15 @@ import SubHeader from './components/SubHeader'
 function App() {
   return (
     <>
-      <Header />
-      <SubHeader />
-      <PageContainer>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Header />
+        <SubHeader />
+        <PageContainer>
+
           <RouteConfig />
-        </BrowserRouter>
-      </PageContainer>
+        </PageContainer>
+      </BrowserRouter>
+
     </>
   )
 }
