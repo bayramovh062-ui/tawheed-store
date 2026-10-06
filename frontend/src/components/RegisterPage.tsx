@@ -3,10 +3,14 @@ import { TextField, Button, Link } from '@mui/material'
 import { useFormik } from 'formik'
 import { registerSchema } from '../schemas/registerSchema'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { fetchRegisterResult } from '../redux/slice/authSlice'
+import type { AppDispatch } from '../redux/store'
 
 function RegisterPage() {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch<AppDispatch>()
 
     const formik = useFormik({
         initialValues: {
@@ -18,7 +22,13 @@ function RegisterPage() {
         },
         validationSchema: registerSchema,
         onSubmit: async (values) => {
-            console.log('form values', values)
+            try {
+                const result = await dispatch(fetchRegisterResult(values)).unwrap()
+                navigate('/')
+                console.log("success")
+            } catch (error) {
+                console.log(error)
+            }
         }
     })
     return (

@@ -35,8 +35,8 @@ export const authState: loginAuthStateType = {
 }
 
 export interface registerDataCredentials {
-    name: string,
-    last_name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     password: string,
     location?: string
