@@ -10,6 +10,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import { useNavigate } from 'react-router-dom'
 
+
 function Header() {
     const [isLoggedUser, setIsLoggedUser] = useState(false)
     const navigate = useNavigate()
