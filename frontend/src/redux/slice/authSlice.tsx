@@ -60,7 +60,12 @@ export const fetchLoginResult = createAsyncThunk('post/login', async (credential
 
 export const fetchRegisterResult = createAsyncThunk('post/register', async (registerData: registerDataCredentials, { rejectWithValue, dispatch }) => {
     try {
-        const response = await axios.post(`http://localhost:5000/api/auth/register`, registerData)
+        const response = await axios.post(`http://localhost:5000/api/auth/register`, {
+            name: registerData.firstName,
+            last_name: registerData.lastName,
+            email: registerData.email,
+            password: registerData.password
+        })
         if (response.status === 201 || response.data) {
             const credentials = {
                 email: registerData.email,
