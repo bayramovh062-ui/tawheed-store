@@ -1,15 +1,40 @@
-.register-wrapper {
+.register-login-wrapper {
     width: 100%;
-    background-color: rgb(237, 237, 240);
+    background-color: rgb(235, 237, 242);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.register-container {
+.register-login-container {
     height: 100vh;
     width: 100%;
-    max-width: 700px;
+    max-width: 425px;
     border: none;
+    background-color: white;
+    margin-top: 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 2px 4px rgb(210, 208, 208)
+}
 
+.register-login-form {
+    width: 390px;
+    height: 430px;
+    border-radius: 20px;
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 2px 3px rgb(172, 169, 169);
+    text-align: center;
+}
+
+.form-inputs {
+    width: 100%;
+    border: 1px black solid;
+    border-radius: 20px;
+    height: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
