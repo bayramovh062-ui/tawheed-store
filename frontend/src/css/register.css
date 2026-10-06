@@ -1,0 +1,15 @@
+.register-wrapper {
+    width: 100%;
+    background-color: rgb(221, 223, 243);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-container {
+    height: 100vh;
+    width: 100%;
+    max-width: 700px;
+    border: none;
+
+}
