@@ -18,7 +18,8 @@ function RegisterPage() {
             lastName: '',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            location: ''
         },
         validationSchema: registerSchema,
         onSubmit: async (values) => {
@@ -100,6 +101,18 @@ function RegisterPage() {
                             onBlur={formik.handleBlur}
                             error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
                             helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                        />
+                        <TextField sx={{ width: '70%' }}
+                            id="location"
+                            name='location'
+                            size='small'
+                            label="Location"
+                            variant="outlined"
+                            value={formik.values.location}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.location && Boolean(formik.errors.location)}
+                            helperText={formik.touched.location && formik.errors.location}
                         />
                     </div>
                     <Button type='submit' variant="contained" sx={{ marginTop: '20px', width: '70%' }}>Sign up</Button>
