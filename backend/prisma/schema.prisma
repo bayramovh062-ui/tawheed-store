@@ -47,6 +47,9 @@ model User {
   activity_log Activity_log[]
   comment Comment[]
   favorites Favorite []
+  isVerified Boolean @default false
+  otpCode String?
+  otpExpressAt DateTime?
 }
 
 model Category {

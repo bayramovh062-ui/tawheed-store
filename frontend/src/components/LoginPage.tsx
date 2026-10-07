@@ -60,7 +60,10 @@ function LoginPage() {
                             helperText={formik.touched.password && formik.errors.password}
                         />
                     </div>
-                    <Button type='submit' variant="contained" sx={{ marginTop: '20px', width: '70%' }}>Login</Button>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button type='submit' variant="contained" sx={{ marginTop: '20px', width: '70%' }}>Login</Button>
+                    </div>
+
                     <Link sx={{ display: 'block', marginTop: '18px', cursor: 'pointer' }} onClick={() => {
                         navigate('/register')
                     }}>You don't have an account? Sign Up</Link>

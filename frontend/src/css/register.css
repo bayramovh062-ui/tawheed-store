@@ -22,12 +22,15 @@
 
 .register-login-form {
     width: 390px;
-    height: 580px;
+    height: 670px;
     border-radius: 20px;
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
     box-shadow: 0px 2px 3px rgb(172, 169, 169);
     text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .form-inputs {

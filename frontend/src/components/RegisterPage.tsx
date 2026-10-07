@@ -115,7 +115,9 @@ function RegisterPage() {
                             helperText={formik.touched.location && formik.errors.location}
                         />
                     </div>
-                    <Button type='submit' variant="contained" sx={{ marginTop: '20px', width: '70%' }}>Sign up</Button>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button type='submit' variant="contained" sx={{ marginTop: '20px', width: '70%' }}>Sign up</Button>
+                    </div>
                     <Link sx={{ display: 'block', marginTop: '18px', cursor: 'pointer' }} onClick={() => {
                         navigate('/login')
                     }}>Already have an account? Login</Link>

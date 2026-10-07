@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const { asyncHandler } = require('../utils/asyncHandler')
 const secretKey = process.env.JWT_SECRET
 const { AppError } = require('../utils/AppError')
+const { sendOtpEmail } = require('../utils/sendEmail');
 
 const saltRounds = 10
 
@@ -37,6 +38,8 @@ const register = asyncHandler(async (req, res) => {
     }
     const hashedPassword = await createHash(password, saltRounds)
 
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await prisma.user.create({
         data: {
             'name': name,
@@ -44,11 +47,15 @@ const register = asyncHandler(async (req, res) => {
             'password': hashedPassword,
             'email': email,
             'location': location,
-            'role': 'USER'
+            'role': 'USER',
+            otpCode,
+            otpExpiresAt
         }
     })
+
+    await sendOtpEmail(email, otpCode)
     return res.status(201).json({
-        message: 'User created with successfully'
+        message: 'Registration successful. Please verify the OTP code sent to your email.'
     })
 })
 
