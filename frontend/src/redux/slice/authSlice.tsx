@@ -58,7 +58,7 @@ export const fetchLoginResult = createAsyncThunk('post/login', async (credential
     }
 })
 
-export const fetchRegisterResult = createAsyncThunk('post/register', async (registerData: registerDataCredentials, { rejectWithValue, dispatch }) => {
+export const fetchRegisterResult = createAsyncThunk('post/register', async (registerData: registerDataCredentials, { rejectWithValue, }) => {
     try {
         const response = await axios.post(`http://localhost:5000/api/auth/register`, {
             name: registerData.firstName,
@@ -66,18 +66,27 @@ export const fetchRegisterResult = createAsyncThunk('post/register', async (regi
             email: registerData.email,
             password: registerData.password
         })
-        if (response.status === 201 || response.data) {
-            const credentials = {
-                email: registerData.email,
-                password: registerData.password
-            }
-
-            const loginResult = await dispatch(fetchLoginResult(credentials)).unwrap()
-            return loginResult
-        }
+        return response.data
 
     } catch (error: any) {
         return rejectWithValue(error.response?.data?.message || 'An error occuried while login')
+    }
+})
+
+export interface verifyOtpCredentials {
+    email: string;
+    otpCode: string;
+}
+
+export const fetchVerifyOtpResult = createAsyncThunk('post/verify-otp', async (verifyOtpData: verifyOtpCredentials, { rejectWithValue }) => {
+    try {
+        const response = await axios.post(`http://localhost:5000/api/auth/verify-otp`, verifyOtpData)
+        if (response.data.token) {
+            localStorage.setItem('token', response.data.token)
+        }
+        return response.data
+    } catch (error: any) {
+        return rejectWithValue(error.response?.data?.message || 'An error occuried while verifying OTP')
     }
 })
 
@@ -114,6 +123,23 @@ const authSlice = createSlice({
                 state.loading = false
             })
             .addCase(fetchRegisterResult.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as string
+            })
+            .addCase(fetchVerifyOtpResult.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchVerifyOtpResult.fulfilled, (state, action) => {
+                state.loading = false
+                state.token = action.payload.token
+                state.user = action.payload.user
+            })
+            .addCase(fetchVerifyOtpResult.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as string
+            })
+            .addCase(fetchLoginResult.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload as string
             })
