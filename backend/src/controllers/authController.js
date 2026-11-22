@@ -75,7 +75,8 @@ const register = asyncHandler(async (req, res) => {
 
     await sendOtpEmail(email, otpCode)
     return res.status(201).json({
-        message: 'Registration successful. Please verify the OTP code sent to your email.'
+        message: 'Registration successful. Please verify the OTP code sent to your email.',
+        email: email
     })
 })
 
