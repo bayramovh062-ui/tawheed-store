@@ -24,13 +24,15 @@ export interface loginAuthStateType {
     token: null | string,
     user: user | null,
     loading: boolean,
-    error: string | null
+    error: string | null,
+    email: string | null
 }
 
 export const authState: loginAuthStateType = {
     token: localStorage.getItem('token') || null,
     user: null,
     error: null,
+    email: null,
     loading: false
 }
 
@@ -119,8 +121,9 @@ const authSlice = createSlice({
                 state.loading = true
                 state.error = null
             })
-            .addCase(fetchRegisterResult.fulfilled, (state) => {
+            .addCase(fetchRegisterResult.fulfilled, (state, action) => {
                 state.loading = false
+                state.email = action.payload.email
             })
             .addCase(fetchRegisterResult.rejected, (state, action) => {
                 state.loading = false
@@ -139,10 +142,7 @@ const authSlice = createSlice({
                 state.loading = false
                 state.error = action.payload as string
             })
-            .addCase(fetchLoginResult.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload as string
-            })
+
     }
 })
 

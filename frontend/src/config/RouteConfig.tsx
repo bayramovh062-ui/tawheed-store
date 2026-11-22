@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import Products from '../components/Products'
 import RegisterPage from '../components/RegisterPage'
 import LoginPage from '../components/LoginPage'
+import VerifyOtpPage from '../components/VerifyOtpPage';
 function RouteConfig() {
     return (
         <div>
@@ -9,6 +10,7 @@ function RouteConfig() {
                 <Route path='/' element={<Products />}></Route>
                 <Route path='/register' element={<RegisterPage />}></Route>
                 <Route path='/login' element={<LoginPage />}></Route>
+                <Route path='/verify-otp' element={<VerifyOtpPage />}></Route>
             </Routes>
         </div>
     )

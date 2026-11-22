@@ -1,0 +1,53 @@
+.verify-otp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.verify-otp-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.verify-otp-description {
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+}
+
+.verify-otp-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.verify-otp-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.verify-otp-resend {
+    color: black;
+    margin-top: 8px;
+}
+
+.verify-otp-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -25,8 +25,7 @@ function RegisterPage() {
         onSubmit: async (values) => {
             try {
                 const result = await dispatch(fetchRegisterResult(values)).unwrap()
-                navigate('/')
-                console.log("success")
+                navigate('/verify-otp', { state: { email: values.email } }); console.log("success")
             } catch (error) {
                 console.log(error)
             }
